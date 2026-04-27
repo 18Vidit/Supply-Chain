@@ -1,0 +1,10 @@
+# Person 2 — Risk Engine Dependencies
+# Install with: pip install -r requirements-risk.txt
+
+shapely>=2.0.0
+geopy>=2.4.0
+numpy>=1.24.0
+httpx>=0.27.0
+pydantic>=2.0.0
+fastapi>=0.109.0
+uvicorn>=0.27.0

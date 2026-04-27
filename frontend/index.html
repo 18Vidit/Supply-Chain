@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AxisIQ Logistics Control Tower</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" href="styles/styles.css">
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">A</div>
+        <div>
+          <div class="brand-name">AxisIQ</div>
+          <div class="brand-subtitle">Control Tower</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" type="button" data-nav-target="overview-section"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+        <button class="nav-item" type="button" data-nav-target="routes-section"><i data-lucide="route"></i><span>Routes</span></button>
+        <button class="nav-item" type="button" data-nav-target="ports-section"><i data-lucide="ship"></i><span>Ports</span></button>
+        <button class="nav-item" type="button" data-nav-target="risk-section"><i data-lucide="shield-alert"></i><span>Risk</span></button>
+        <button class="nav-item" type="button" data-nav-target="aiops-section"><i data-lucide="brain-circuit"></i><span>AI Ops</span></button>
+      </nav>
+
+      <div class="sidebar-section">
+        <div class="section-label">Network Mix</div>
+        <div id="mode-mix" class="mini-bars"></div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-label">Flow Mix</div>
+        <div id="flow-mix" class="mini-bars"></div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar" id="overview-section">
+        <div>
+          <h1>Global Logistics Intelligence</h1>
+          <p id="system-line">Connecting live lanes, risk signals, and route decisions.</p>
+        </div>
+        <div class="toolbar">
+          <button class="icon-button" id="zoom-world" type="button" title="Global map">
+            <i data-lucide="globe-2"></i>
+          </button>
+          <button class="icon-button" id="refresh-btn" type="button" title="Refresh data">
+            <i data-lucide="refresh-cw"></i>
+          </button>
+          <button class="action-button" id="reroute-all-btn" type="button">
+            <i data-lucide="git-branch"></i>
+            <span>Reroute Critical</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="kpi-grid">
+        <article class="kpi-card">
+          <div class="kpi-icon blue"><i data-lucide="boxes"></i></div>
+          <div>
+            <div class="kpi-label">Active Shipments</div>
+            <div class="kpi-value" id="s-active">0</div>
+          </div>
+        </article>
+        <article class="kpi-card">
+          <div class="kpi-icon green"><i data-lucide="map-pinned"></i></div>
+          <div>
+            <div class="kpi-label">Countries</div>
+            <div class="kpi-value" id="s-countries">0</div>
+          </div>
+        </article>
+        <article class="kpi-card">
+          <div class="kpi-icon amber"><i data-lucide="triangle-alert"></i></div>
+          <div>
+            <div class="kpi-label">Active Hazards</div>
+            <div class="kpi-value" id="s-hazards">0</div>
+          </div>
+        </article>
+        <article class="kpi-card">
+          <div class="kpi-icon red"><i data-lucide="badge-dollar-sign"></i></div>
+          <div>
+            <div class="kpi-label">Value At Risk</div>
+            <div class="kpi-value" id="s-risk-value">$0</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="ops-grid">
+        <article class="panel map-panel" id="routes-section">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Live Network Map</div>
+              <div class="panel-meta" id="map-meta">Global view</div>
+            </div>
+            <div class="segmented">
+              <button class="selected" type="button" data-transport-mode="land">By Land</button>
+              <button type="button" data-transport-mode="water">By Water</button>
+              <button type="button" data-transport-mode="aerial">Aerial</button>
+            </div>
+          </div>
+          <div id="map"></div>
+        </article>
+
+        <article class="panel decision-panel" id="aiops-section">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">AI Decision Brief</div>
+              <div class="panel-meta" id="brief-meta">Select a shipment</div>
+            </div>
+          </div>
+          <div id="decision-body" class="decision-body">
+            <div class="empty-state">No shipment selected</div>
+          </div>
+          <div class="ask-box">
+            <input id="ask-input" type="text" placeholder="Ask about risk, route, cost, or delay">
+            <button class="icon-button dark" id="ask-btn" type="button" title="Ask AI">
+              <i data-lucide="send"></i>
+            </button>
+          </div>
+          <div id="ai-chat" class="ai-chat"></div>
+        </article>
+      </section>
+
+      <section class="data-grid">
+        <article class="panel table-panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Priority Shipments</div>
+              <div class="panel-meta" id="shipment-meta">Ranked by live risk</div>
+            </div>
+          </div>
+          <div id="shipment-list" class="table-list"></div>
+        </article>
+
+        <article class="panel table-panel" id="ports-section">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">International Lanes</div>
+              <div class="panel-meta" id="lane-meta">Ports, modes, and reliability</div>
+            </div>
+          </div>
+          <div id="lane-list" class="lane-list"></div>
+        </article>
+
+        <article class="panel alert-panel" id="risk-section">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Decision Alerts</div>
+              <div class="panel-meta">AI-ranked actions</div>
+            </div>
+          </div>
+          <div id="alert-list" class="alert-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

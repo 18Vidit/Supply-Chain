@@ -1,0 +1,17 @@
+# Person 2's risk engine dependencies (from requirements-risk.txt)
+shapely
+geopy
+numpy
+httpx
+requests
+python-dotenv
+pydantic
+fastapi
+
+# Person 1's core backend dependencies
+uvicorn[standard]>=0.34.0
+sqlalchemy[asyncio]>=2.0.36
+asyncpg>=0.30.0
+alembic>=1.14.0
+pydantic-settings>=2.7.0
+firebase-admin>=6.5.0

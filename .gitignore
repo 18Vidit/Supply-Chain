@@ -1,0 +1,33 @@
+# Environment variables (NEVER commit)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+.venv/
+
+# Pytest
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Node (for frontend when Person 4 adds it)
+node_modules/
+.next/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
